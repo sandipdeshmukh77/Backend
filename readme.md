@@ -19,7 +19,7 @@ This repository contains a backend API project built with Express.js and MongoDB
 
 1. Clone the repository
 ```bash
-git clone https://github.com/sandipdeshmukh77/Backend
+git clone https://github.com/sandipdeshmukh77/Backend.git
 cd express-mongoDB
 ```
 
