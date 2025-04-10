@@ -148,7 +148,7 @@ const loginUser = asyncHandler(async (req, res) => {
 const logoutUser = asyncHandler(async (req, res) => {
     User.findByIdAndUpdate(req.user._id,
         {
-            $set: { refreshToken: undefined }
+            $unset: { refreshToken: 1 }
         },
         { new: true }
     )
@@ -231,7 +231,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
         throw new ApiError(401, "Invalid password")
     }
     user.password = newPassword
-    await user.save(validateBeforeSave = false)
+    await user.save({ validateBeforeSave: false })
 
     return res.status(200)
         .json(
@@ -287,7 +287,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 })
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
-    const avatarLocalPath = req?.files?.path
+    const avatarLocalPath = req?.file?.path
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar is required");
@@ -311,7 +311,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
-    const coverImageLocalPath = req?.files?.path
+    const coverImageLocalPath = req?.file?.path
 
     if (!coverImageLocalPath) {
         throw new ApiError(400, "cover image is required");
@@ -449,15 +449,14 @@ const getWatchHistory = asyncHandler(async (res, req) => {
             }
         }
     ])
+
+    return res.status(200)
+        .json(
+            new ApiResponse(200, user[0].watchHistory, "Watch history fetched successfully")
+        )
 })
 
-return res
-    .status
-    .json(
-        new ApiResponse(200, user[0]?.watchhistory,
-            "watch history fetched successfully"
-        )
-    )
+
 
 export {
     registerUser,
